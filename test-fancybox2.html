@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Upload Preview</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+</head>
+<body>
+  <input type="file" id="video-upload" accept="video/*">
+  <video id="video-preview" controls style="display: none;"></video>
+  <a href="#" id="open-fancybox">Open in Fancybox</a>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+  />
+  <script>
+  $(document).ready(function() {
+    const videoUpload = document.getElementById('video-upload');
+    const videoPreview = document.getElementById('video-preview');
+    const openFancybox = document.getElementById('open-fancybox');
+
+    videoUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      console.log(file.type)
+      if (file.type.match('video.*')) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e) {
+          videoPreview.src = e.target.result;
+          videoPreview.style.display = 'block';
+        };
+      } else {
+        alert('Please select a video file.');
+      }
+    });
+
+    openFancybox.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (videoPreview.src) {
+        Fancybox.show({
+          src: videoPreview.src,
+        //   type: 'iframe',
+        type: 'video',
+          opts: {
+            // You can customize Fancybox options here
+            // https://fancyapps.com/fancybox/3/docs/
+            Toolbar: {
+              display: {
+                left: ["close"],
+              },
+            },
+          }
+        });
+      } else {
+        alert('Please upload a video first.');
+      }
+    });
+  });
+  </script>
+</body>
+</html>
